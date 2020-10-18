@@ -1,10 +1,6 @@
 import { Component, forwardRef, HostBinding, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-export interface RangeInterval {
-  end: number;
-  start: number;
-}
+import { RangeInterval } from './models/range-interval.model';
 
 export const MAT_RANGE_SLIDER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -31,42 +27,28 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
   }
   private _disabled: boolean = false;
 
-  /* Superior limit of the range slider */
-  @Input()
-  public get max(): number {
-    return this._max;
-  }
-  public set max(maxValue: number) {
-    this._max = maxValue;
-  }
-  private _max: number = 100;
-
-  /* Inferior limit of the range slider */
-  @Input()
-  public get min(): number {
-    return this._min;
-  }
-  public set min(minValue: number) {
-    this._min = minValue;
-  }
-  private _min: number = 0;
-
   /* Range, aka the low and high values of the range slider */
   @Input()
-  public get range(): RangeInterval | null {
-    if (this._range === null) {
-      this._range = {
-        end: this._max,
-        start: this._min
-      };
-    }
-
+  public get range(): RangeInterval {
     return this._range;
   }
-  public set range(newRange: RangeInterval | null) {
+  public set range(newRange: RangeInterval) {
     this._range = newRange;
   }
-  private _range: RangeInterval | null = null;
+  private _range: RangeInterval = {
+    max: 100,
+    min: 0
+  };
+
+  /* Controls the visibility of thumb label */
+  @Input()
+  public get thumbLabel(): boolean {
+    return this._thumbLabel;
+  }
+  public set thumbLabel(value: boolean) {
+    this._thumbLabel = value;
+  }
+  private _thumbLabel: boolean = false;
 
   /* Controls the orientation of the slider */
   @Input()
@@ -91,6 +73,12 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
   private _highValuePercent: number = 0;
 
   @HostBinding('class') public hostClassName: string = RANGE_SLIDER_CLASS;
+  @HostBinding('class.mat-slider-horizontal]') public isHorizontalSlider(): boolean {
+    return !this._vertical;
+  }
+  @HostBinding('class.mat-slider-vertical]') public isVerticalSlider(): boolean {
+    return this._vertical;
+  }
 
   private _onChangeCallback: (value: any) => void = () => {};
   private _onTouchedCallback: (value: any) => void = () => {};
