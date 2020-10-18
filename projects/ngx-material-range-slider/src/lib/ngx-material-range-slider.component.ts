@@ -18,7 +18,7 @@ const RANGE_SLIDER_CLASS = 'mat-range-slider';
   selector: 'ngx-material-range-slider',
   providers: [MAT_RANGE_SLIDER_VALUE_ACCESSOR],
   templateUrl: 'ngx-material-range-slider.component.html',
-  styles: ['ngx-material-range-slider.component.scss']
+  styleUrls: ['ngx-material-range-slider.component.scss']
 })
 export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
   /* Used for enabling or disabling the slider */

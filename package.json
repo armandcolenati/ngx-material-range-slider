@@ -6,15 +6,16 @@
   "license": "MIT",
   "keywords": [],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/armandcolenati/ngx-material-range-slider"
+    "type": "git",
+    "url": "https://github.com/armandcolenati/ngx-material-range-slider"
   },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
