@@ -14,6 +14,16 @@ $mat-range-slider-thumb-size: 20px;
 		min-width: $mat-range-slider-min-size;
 		position: relative;
 	}
+
+	&.mat-slider-horizontal {
+		height: $mat-range-slider-thickness;
+		min-width: $mat-range-slider-min-size;
+	}
+
+	&.mat-slider-vertical {
+		min-height: $mat-range-slider-min-size;
+		width: $mat-range-slider-thickness;
+	}
 }
 
 .mat-range-slider-thumb {

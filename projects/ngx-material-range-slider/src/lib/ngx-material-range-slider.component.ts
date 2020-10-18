@@ -73,10 +73,10 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
   private _highValuePercent: number = 0;
 
   @HostBinding('class') public hostClassName: string = RANGE_SLIDER_CLASS;
-  @HostBinding('class.mat-slider-horizontal]') public isHorizontalSlider(): boolean {
+  @HostBinding('class.mat-range-slider-horizontal]') public isHorizontalSlider(): boolean {
     return !this._vertical;
   }
-  @HostBinding('class.mat-slider-vertical]') public isVerticalSlider(): boolean {
+  @HostBinding('class.mat-range-slider-vertical]') public isVerticalSlider(): boolean {
     return this._vertical;
   }
 
