@@ -1,0 +1,19 @@
+$default-transition-duration: 400ms;
+$ease-out-transition-fuction: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+$mat-range-slider-thumb-default-scale: 0.7;
+$mat-range-slider-thumb-size: 20px;
+
+.mat-range-slider {
+    display: flex;
+    position: relative;
+}
+
+.mat-range-slider-thumb {
+    border-radius: 50%;
+    height: $mat-range-slider-thumb-size;
+    position: absolute;
+    transform: scale($mat-range-slider-thumb-default-scale);
+    transition: transform $default-transition-duration $ease-out-transition-fuction;
+    width: $mat-range-slider-thumb-size;
+}
