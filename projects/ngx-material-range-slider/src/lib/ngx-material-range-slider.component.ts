@@ -46,7 +46,7 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     }
   }
 
-  /* Min limit of range */
+  /* Max limit of range */
   @Input()
   public set max(maxLimit: number | null) {
     if (maxLimit !== null) {
@@ -80,18 +80,6 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
       this.isVerticalSubject.next(isVertical);
     }
   }
-
-  /* Low value as percentage of the slider */
-  public get lowValuePercent(): number {
-    return this._clamp(this._lowValuePercent);
-  }
-  private _lowValuePercent: number = 0;
-
-  /* High value as percentage of the slider */
-  public get highValuePercent(): number {
-    return this._clamp(this._highValuePercent);
-  }
-  private _highValuePercent: number = 0;
 
   @HostBinding('class') public hostClassName: string = RANGE_SLIDER_CLASS;
 
@@ -234,10 +222,5 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
       this.renderer.addClass(sliderElement, HORIZONTAL_SLIDER_CLASS);
       this.renderer.removeClass(sliderElement, VERTICAL_SLIDER_CLASS);
     })
-  }
-
-  /* Utils */
-  private _clamp(value: number, min = 0, max = 1): number {
-    return Math.max(min, Math.min(value, max));
   }
 }
