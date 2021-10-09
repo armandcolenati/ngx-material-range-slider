@@ -12,6 +12,7 @@ export const MAT_RANGE_SLIDER_VALUE_ACCESSOR: any = {
 };
 
 const RANGE_SLIDER_CLASS = 'ngx-mat-range-slider';
+const RANGE_SLIDER_DISABLED_CLASS = 'ngx-mat-range-slider-disabled';
 
 const DEFAULT_RANGE_LIMIT: RangeInterval = {
   max: 100,
@@ -152,7 +153,12 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
       distinctUntilChanged((transform1, transform2) => transform1 === transform2)
     );
 
-    this.subscriptions.add(this._syncSliderOrientation());
+    const subscriptionsCollection = [
+      this._syncSliderDisabledState(),
+      this._syncSliderOrientation()
+    ]
+
+    subscriptionsCollection.forEach((subscription) => this.subscriptions.add(subscription));
   }
 
   public ngAfterViewInit(): void {
@@ -229,6 +235,16 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
   }
 
   /* Subscriptions */
+  private _syncSliderDisabledState(): Subscription {
+    return this.isDisabledSubject.subscribe((isDisabled) => {
+      const sliderElement = this.elementRef.nativeElement;
+
+      isDisabled
+        ? this.renderer.addClass(sliderElement, RANGE_SLIDER_DISABLED_CLASS)
+        : this.renderer.removeClass(sliderElement, RANGE_SLIDER_DISABLED_CLASS);
+    });
+  }
+
   private _syncSliderOrientation(): Subscription {
     return this.isVerticalSubject.subscribe((isVertical) => {
       const sliderElement = this.elementRef.nativeElement;
@@ -242,6 +258,6 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
 
       this.renderer.addClass(sliderElement, HORIZONTAL_SLIDER_CLASS);
       this.renderer.removeClass(sliderElement, VERTICAL_SLIDER_CLASS);
-    })
+    });
   }
 }

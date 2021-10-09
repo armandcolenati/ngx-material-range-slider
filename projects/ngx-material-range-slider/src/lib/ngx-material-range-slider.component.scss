@@ -12,6 +12,10 @@ $thumb-size: 20px;
 
 $thumb-default-scale: 0.7;
 
+/* Colors - Sad implementation for now */
+$slider-main-color: rgb(0, 113, 179);
+$slider-off-color: rgba(black, 0.26);
+
 :host {
   &.ngx-mat-range-slider {
     box-sizing: border-box;
@@ -91,6 +95,14 @@ $thumb-default-scale: 0.7;
       left: 50%;
     }
   }
+
+  /* Disabled colors */
+  &.ngx-mat-range-slider-disabled {
+    .ngx-mat-range-slider-track-filler,
+    .ngx-mat-range-slider-thumb {
+      background-color: $slider-off-color;
+    }
+  }
 }
 
 .ngx-mat-range-slider-wrapper {
@@ -132,10 +144,7 @@ $thumb-default-scale: 0.7;
     $ease-out-transition-fuction;
 }
 
-/* Colors - Sad implementation for now */
-$slider-main-color: rgb(0, 113, 179);
-$slider-off-color: rgba(black, 0.26);
-
+/* Colors */
 .ngx-mat-range-slider-track-background {
   background-color: $slider-off-color;
 }
