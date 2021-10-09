@@ -1,36 +1,66 @@
+@use 'sass:math';
+
 $default-transition-duration: 400ms;
 $ease-out-transition-fuction: cubic-bezier(0.25, 0.8, 0.25, 1);
 
-$mat-range-slider-thickness: 48px;
-$mat-range-slider-min-size: 128px;
+$slider-padding: 8px;
+$slider-thickness: 48px;
+$slider-min-size: 128px;
 
-$mat-range-slider-thumb-default-scale: 0.7;
-$mat-range-slider-thumb-size: 20px;
+$slider-thumb-default-scale: 0.7;
+$slider-thumb-size: 20px;
+
+$track-thickness: 2px;
 
 :host {
-	&.mat-range-slider {
+	&.ngx-mat-range-slider {
+		box-sizing: border-box;
 		display: inline-block;
-		height: $mat-range-slider-thickness;
-		min-width: $mat-range-slider-min-size;
 		position: relative;
+		padding: $slider-padding;
 	}
 
-	&.mat-slider-horizontal {
-		height: $mat-range-slider-thickness;
-		min-width: $mat-range-slider-min-size;
+	/* Horizontal slider styling */
+	&.ngx-mat-range-slider-horizontal {
+		height: $slider-thickness;
+		min-width: $slider-min-size;
+
+		.ngx-mat-range-slider-wrapper {
+			height: $track-thickness;
+			top: ($slider-thickness - $track-thickness) / 2;
+			left: $slider-padding;
+			right: $slider-padding;
+		  }
+
+		.ngx-mat-range-slider-track-wrapper {
+			height: $track-thickness;
+			width: 100%;
+		}
 	}
 
-	&.mat-slider-vertical {
-		min-height: $mat-range-slider-min-size;
-		width: $mat-range-slider-thickness;
+	/* Vertical slider styling */
+	&.ngx-mat-range-slider-vertical {
+		min-height: $slider-min-size;
+		width: $slider-thickness;
 	}
+}
+
+.ngx-mat-range-slider-wrapper {
+	position: absolute;
+}
+
+.ngx-mat-range-slider-track-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
 }
 
 .mat-range-slider-thumb {
 	border-radius: 50%;
-	height: $mat-range-slider-thumb-size;
+	height: $slider-thumb-size;
 	position: absolute;
-	transform: scale($mat-range-slider-thumb-default-scale);
+	transform: scale($slider-thumb-default-scale);
 	transition: transform $default-transition-duration $ease-out-transition-fuction;
-	width: $mat-range-slider-thumb-size;
+	width: $slider-thumb-size;
 }

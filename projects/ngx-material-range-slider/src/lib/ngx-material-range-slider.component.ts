@@ -8,7 +8,7 @@ export const MAT_RANGE_SLIDER_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-const RANGE_SLIDER_CLASS = 'mat-range-slider';
+const RANGE_SLIDER_CLASS = 'ngx-mat-range-slider';
 
 @Component({
   selector: 'ngx-material-range-slider',
@@ -73,10 +73,10 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
   private _highValuePercent: number = 0;
 
   @HostBinding('class') public hostClassName: string = RANGE_SLIDER_CLASS;
-  @HostBinding('class.mat-range-slider-horizontal') public get isHorizontalSlider(): boolean {
+  @HostBinding('class.ngx-mat-range-slider-horizontal') public get isHorizontalSlider(): boolean {
     return !this._vertical;
   }
-  @HostBinding('class.mat-range-slider-vertical') public get isVerticalSlider(): boolean {
+  @HostBinding('class.ngx-mat-range-slider-vertical') public get isVerticalSlider(): boolean {
     return this._vertical;
   }
 
@@ -99,7 +99,7 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  private _clamp(value: number, min = 0, max = 1) {
+  private _clamp(value: number, min = 0, max = 1): number {
     return Math.max(min, Math.min(value, max));
   }
 }
