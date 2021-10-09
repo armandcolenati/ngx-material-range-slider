@@ -2,9 +2,14 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { RangeInterval } from 'projects/ngx-material-range-slider/src/lib/models/range-interval.model';
 
-const DEFAULT_RANGE: RangeInterval = {
-  min: 1,
-  max: 10
+const HORIZONTAL_DEFAULT_RANGE: RangeInterval = {
+  min: 20,
+  max: 80
+};
+
+const VERTICAL_DEFAULT_RANGE: RangeInterval = {
+  min: 40,
+  max: 60
 };
 
 @Component({
@@ -13,5 +18,6 @@ const DEFAULT_RANGE: RangeInterval = {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public readonly rangeSliderControl = new FormControl(DEFAULT_RANGE);
+  public readonly horizontalSliderControl = new FormControl(HORIZONTAL_DEFAULT_RANGE);
+  public readonly verticalSliderControl = new FormControl(VERTICAL_DEFAULT_RANGE);
 }
