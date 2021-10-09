@@ -1,9 +1,48 @@
 <div>
     <h1>Horizontal range slider</h1>
-    <ngx-material-range-slider [formControl]="horizontalSliderControl"></ngx-material-range-slider>
+
+    <div>
+        <div>Min: <input type="number" [formControl]="horizontalSliderMinLimitControl"/></div>
+        <div>Max: <input type="number" [formControl]="horizontalSliderMaxLimitControl"/></div>
+    </div>
+
+    <pre>{{ horizontalSliderControl.value | json }}</pre>
+
+    <ngx-material-range-slider
+        [formControl]="horizontalSliderControl"
+        [min]="horizontalSliderMinLimitControl.value"
+        [max]="horizontalSliderMaxLimitControl.value">
+    </ngx-material-range-slider>
 </div>
 
 <div>
     <h1>Vertical range slider</h1>
-    <ngx-material-range-slider [formControl]="verticalSliderControl" [vertical]="true"></ngx-material-range-slider>
+
+    <div>
+        <div>Min: <input type="number" [formControl]="verticalSliderMinLimitControl"/></div>
+        <div>Max: <input type="number" [formControl]="verticalSliderMaxLimitControl"/></div>
+    </div>
+
+    <pre>{{ verticalSliderControl.value | json }}</pre>
+
+    <ngx-material-range-slider
+        [formControl]="verticalSliderControl"
+        [vertical]="true"
+        [min]="verticalSliderMinLimitControl.value"
+        [max]="verticalSliderMaxLimitControl.value">
+    </ngx-material-range-slider>
+</div>
+
+<div>
+    <h1>Dynamic orientation slider</h1>
+
+    <div>
+        <input type="checkbox" [formControl]="dynamicSliderVerticalControl"/>
+        Vertical
+    </div>
+
+    <ngx-material-range-slider
+        [formControl]="dynamicSliderControl"
+        [vertical]="dynamicSliderVerticalControl.value">
+    </ngx-material-range-slider>
 </div>

@@ -8,8 +8,8 @@ const HORIZONTAL_DEFAULT_RANGE: RangeInterval = {
 };
 
 const VERTICAL_DEFAULT_RANGE: RangeInterval = {
-  min: 40,
-  max: 60
+  min: 30,
+  max: 70
 };
 
 @Component({
@@ -19,5 +19,13 @@ const VERTICAL_DEFAULT_RANGE: RangeInterval = {
 })
 export class AppComponent {
   public readonly horizontalSliderControl = new FormControl(HORIZONTAL_DEFAULT_RANGE);
+  public readonly horizontalSliderMinLimitControl = new FormControl(0);
+  public readonly horizontalSliderMaxLimitControl = new FormControl(100);
+  
   public readonly verticalSliderControl = new FormControl(VERTICAL_DEFAULT_RANGE);
+  public readonly verticalSliderMinLimitControl = new FormControl(0);
+  public readonly verticalSliderMaxLimitControl = new FormControl(100);
+  
+  public readonly dynamicSliderControl = new FormControl(HORIZONTAL_DEFAULT_RANGE);
+  public readonly dynamicSliderVerticalControl = new FormControl(false);
 }
