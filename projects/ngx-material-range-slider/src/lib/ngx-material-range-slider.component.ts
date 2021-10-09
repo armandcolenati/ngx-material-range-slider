@@ -1,4 +1,4 @@
-import { Component, forwardRef, HostBinding, Input } from '@angular/core';
+import { Component, forwardRef, HostBinding, HostListener, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { RangeInterval } from './models/range-interval.model';
 
@@ -80,16 +80,17 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
     return this._vertical;
   }
 
-  private _onChangeCallback: (value: any) => void = () => {};
-  private _onTouchedCallback: (value: any) => void = () => {};
+  @HostListener('blur') public onBlur(): void {
+    this._onTouchedCallback();
+  }
+
+  private _onTouchedCallback: () => void = () => {};
 
   public writeValue(range: RangeInterval): void {
     this._range = range;
   }
 
-  public registerOnChange(onChangeCallback: any): void {
-    this._onChangeCallback = onChangeCallback;
-  }
+  public registerOnChange(): void { }
 
   public registerOnTouched(onTouchedCallback: any): void {
     this._onTouchedCallback = onTouchedCallback;

@@ -27,7 +27,7 @@ $track-thickness: 2px;
 
 		.ngx-mat-range-slider-wrapper {
 			height: $track-thickness;
-			top: ($slider-thickness - $track-thickness) / 2;
+			top: math.div($slider-thickness - $track-thickness, 2);
 			left: $slider-padding;
 			right: $slider-padding;
 		  }
