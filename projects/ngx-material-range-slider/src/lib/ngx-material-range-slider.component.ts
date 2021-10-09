@@ -1,5 +1,6 @@
-import { Component, forwardRef, HostBinding, HostListener, Input } from '@angular/core';
+import { Component, forwardRef, HostBinding, HostListener, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 import { RangeInterval } from './models/range-interval.model';
 
 export const MAT_RANGE_SLIDER_VALUE_ACCESSOR: any = {
@@ -16,7 +17,7 @@ const RANGE_SLIDER_CLASS = 'ngx-mat-range-slider';
   templateUrl: 'ngx-material-range-slider.component.html',
   styleUrls: ['ngx-material-range-slider.component.scss']
 })
-export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
+export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, OnInit {
   /* Used for enabling or disabling the slider */
   @Input()
   public get disabled(): boolean {
@@ -84,7 +85,15 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor {
     this._onTouchedCallback();
   }
 
+  public minThumbTransform$!: Observable<string>;
+  public maxThumbTransform$!: Observable<string>;
+
   private _onTouchedCallback: () => void = () => {};
+
+  public ngOnInit(): void {
+    this.minThumbTransform$ = of(this.isVerticalSlider ? 'translateY(-70%)' : 'translateX(-70%)');
+    this.maxThumbTransform$ = of(this.isVerticalSlider ? 'translateY(-30%)' : 'translateX(-30%)');
+  }
 
   public writeValue(range: RangeInterval): void {
     this._range = range;

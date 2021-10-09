@@ -1,4 +1,4 @@
-@use 'sass:math';
+@use "sass:math";
 
 $default-transition-duration: 400ms;
 $ease-out-transition-fuction: cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -7,60 +7,140 @@ $slider-padding: 8px;
 $slider-thickness: 48px;
 $slider-min-size: 128px;
 
-$slider-thumb-default-scale: 0.7;
-$slider-thumb-size: 20px;
-
 $track-thickness: 2px;
+$thumb-size: 20px;
+
+$thumb-default-scale: 0.7;
 
 :host {
-	&.ngx-mat-range-slider {
-		box-sizing: border-box;
-		display: inline-block;
-		position: relative;
-		padding: $slider-padding;
-	}
+  &.ngx-mat-range-slider {
+    box-sizing: border-box;
+    display: inline-block;
+    position: relative;
+    padding: $slider-padding;
+  }
 
-	/* Horizontal slider styling */
-	&.ngx-mat-range-slider-horizontal {
-		height: $slider-thickness;
-		min-width: $slider-min-size;
+  /* Horizontal slider styling */
+  &.ngx-mat-range-slider-horizontal {
+    height: $slider-thickness;
+    min-width: $slider-min-size;
 
-		.ngx-mat-range-slider-wrapper {
-			height: $track-thickness;
-			top: math.div($slider-thickness - $track-thickness, 2);
-			left: $slider-padding;
-			right: $slider-padding;
-		  }
+    .ngx-mat-range-slider-wrapper {
+      height: $track-thickness;
+      top: math.div($slider-thickness - $track-thickness, 2);
+      left: $slider-padding;
+      right: $slider-padding;
+    }
 
-		.ngx-mat-range-slider-track-wrapper {
-			height: $track-thickness;
-			width: 100%;
-		}
-	}
+    .ngx-mat-range-slider-track-wrapper {
+      height: $track-thickness;
+      width: 100%;
+    }
 
-	/* Vertical slider styling */
-	&.ngx-mat-range-slider-vertical {
-		min-height: $slider-min-size;
-		width: $slider-thickness;
-	}
+    .ngx-mat-range-slider-track-filler {
+      height: $track-thickness;
+      width: 100%;
+      transform: scaleX(0);
+    }
+
+    .ngx-mat-range-slider-track-background {
+      height: $track-thickness;
+      width: 100%;
+      transform: scaleX(1);
+    }
+
+    .ngx-mat-range-slider-thumb-container {
+      width: 100%;
+      height: 0;
+      top: 50%;
+    }
+  }
+
+  /* Vertical slider styling */
+  &.ngx-mat-range-slider-vertical {
+    min-height: $slider-min-size;
+    width: $slider-thickness;
+
+    .ngx-mat-range-slider-wrapper {
+      width: $track-thickness;
+      top: $slider-padding;
+      bottom: $slider-padding;
+      left: math.div($slider-thickness - $track-thickness, 2);
+    }
+
+    .ngx-mat-range-slider-track-wrapper {
+      height: 100%;
+      width: $track-thickness;
+    }
+
+    .ngx-mat-range-slider-track-filler {
+      height: 100%;
+      width: $track-thickness;
+      transform: scaleY(0);
+    }
+
+    .ngx-mat-range-slider-track-background {
+      height: 100%;
+      width: $track-thickness;
+      transform: scaleY(1);
+    }
+
+    .ngx-mat-range-slider-thumb-container {
+      height: 100%;
+      width: 0;
+      left: 50%;
+    }
+  }
 }
 
 .ngx-mat-range-slider-wrapper {
-	position: absolute;
+  position: absolute;
 }
 
 .ngx-mat-range-slider-track-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
 
-.mat-range-slider-thumb {
-	border-radius: 50%;
-	height: $slider-thumb-size;
-	position: absolute;
-	transform: scale($slider-thumb-default-scale);
-	transition: transform $default-transition-duration $ease-out-transition-fuction;
-	width: $slider-thumb-size;
+.ngx-mat-range-slider-track-background {
+  position: absolute;
+  transform-origin: 100% 100%;
+}
+
+.ngx-mat-range-slider-track-filler {
+  position: absolute;
+  transform-origin: 0 0;
+}
+
+.ngx-mat-range-slider-thumb-container {
+  position: absolute;
+  z-index: 1;
+}
+
+.ngx-mat-range-slider-thumb {
+  position: absolute;
+  right: math.div(-$thumb-size, 2);
+  bottom: math.div(-$thumb-size, 2);
+  box-sizing: border-box;
+  width: $thumb-size;
+  height: $thumb-size;
+  border-radius: 50%;
+  transform: scale($thumb-default-scale);
+  transition: transform $default-transition-duration
+    $ease-out-transition-fuction;
+}
+
+/* Colors - Sad implementation for now */
+$slider-main-color: rgb(0, 113, 179);
+$slider-off-color: rgba(black, 0.26);
+
+.ngx-mat-range-slider-track-background {
+  background-color: $slider-off-color;
+}
+
+.ngx-mat-range-slider-track-filler,
+.ngx-mat-range-slider-thumb {
+  background-color: $slider-main-color;
 }
