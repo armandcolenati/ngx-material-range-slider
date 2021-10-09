@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, HostBinding, HostListener, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, forwardRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -27,7 +27,7 @@ const VERTICAL_SLIDER_CLASS = 'ngx-mat-range-slider-vertical';
   templateUrl: 'ngx-material-range-slider.component.html',
   styleUrls: ['ngx-material-range-slider.component.scss']
 })
-export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   /* Used for enabling or disabling the slider */
   @Input()
   public get disabled(): boolean {
@@ -87,6 +87,9 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     this._onTouchedCallback();
   }
 
+  @ViewChild('minRangeThumb') public readonly minRangeThumbRef!: ElementRef<HTMLElement>;
+  @ViewChild('maxRangeThumb') public readonly maxRangeThumbRef!: ElementRef<HTMLElement>;
+
   public fillerTransform$!: Observable<string>;
   public minThumbTransform$!: Observable<string>;
   public maxThumbTransform$!: Observable<string>;
@@ -103,10 +106,14 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
 
   private readonly subscriptions = new Subscription();
 
-  constructor(private readonly elementRef: ElementRef, private readonly renderer: Renderer2) { }
+  constructor(
+    private readonly elementRef: ElementRef,
+    private readonly renderer: Renderer2,
+    private readonly ngZone: NgZone
+  ) { }
 
   public ngOnInit(): void {
-    this.initObservables();
+    this._initObservables();
 
     const minThumbOffset$ = this.minValuePercent$.pipe(
       map((minPercent) => (1 - minPercent) * 100)
@@ -156,7 +163,17 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
       distinctUntilChanged((transform1, transform2) => transform1 === transform2)
     );
 
-    this.subscriptions.add(this.syncSliderOrientation());
+    this.subscriptions.add(this._syncSliderOrientation());
+  }
+
+  public ngAfterViewInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.minRangeThumbRef.nativeElement.addEventListener('mousedown', this._minThumbPointerDown);
+      this.minRangeThumbRef.nativeElement.addEventListener('touchstart', this._minThumbPointerDown);
+      
+      this.maxRangeThumbRef.nativeElement.addEventListener('mousedown', this._maxThumbPointerDown);
+      this.maxRangeThumbRef.nativeElement.addEventListener('touchstart', this._maxThumbPointerDown);
+    });
   }
 
   public ngOnDestroy(): void {
@@ -166,6 +183,14 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     this.rangeValueSubject.complete();
 
     this.subscriptions.unsubscribe();
+
+    this.ngZone.runOutsideAngular(() => {
+      this.minRangeThumbRef.nativeElement.removeEventListener('mousedown', this._minThumbPointerDown);
+      this.minRangeThumbRef.nativeElement.removeEventListener('touchstart', this._minThumbPointerDown);
+      
+      this.maxRangeThumbRef.nativeElement.removeEventListener('mousedown', this._maxThumbPointerDown);
+      this.maxRangeThumbRef.nativeElement.removeEventListener('touchstart', this._maxThumbPointerDown);
+    });
   }
 
   public writeValue(range: RangeInterval | null): void {
@@ -184,7 +209,7 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     this.disabled = isDisabled;
   }
 
-  private initObservables(): void {
+  private _initObservables(): void {
     const rangeValuePercents$ = combineLatest([
       this.minRangeLimitSubject,
       this.maxRangeLimitSubject,
@@ -207,8 +232,13 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     );
   }
 
+  /* Events */
+  private _minThumbPointerDown(): void { }
+
+  private _maxThumbPointerDown(): void { }
+
   /* Subscriptions */
-  private syncSliderOrientation(): Subscription {
+  private _syncSliderOrientation(): Subscription {
     return this.isVerticalSubject.subscribe((isVertical) => {
       const sliderElement = this.elementRef.nativeElement;
 
