@@ -184,13 +184,7 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
 
     this.subscriptions.unsubscribe();
 
-    this.ngZone.runOutsideAngular(() => {
-      this.minThumbRef.nativeElement.removeEventListener('mousedown', this._minThumbPointerDown);
-      this.minThumbRef.nativeElement.removeEventListener('touchstart', this._minThumbPointerDown);
-      
-      this.maxThumbRef.nativeElement.removeEventListener('mousedown', this._maxThumbPointerDown);
-      this.maxThumbRef.nativeElement.removeEventListener('touchstart', this._maxThumbPointerDown);
-    });
+    this._removeLocalEvents();
   }
 
   public writeValue(range: RangeInterval | null): void {
@@ -236,6 +230,14 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
   private _minThumbPointerDown(): void { }
 
   private _maxThumbPointerDown(): void { }
+
+  private _removeLocalEvents(): void {
+    this.minThumbRef.nativeElement.removeEventListener('mousedown', this._minThumbPointerDown);
+    this.minThumbRef.nativeElement.removeEventListener('touchstart', this._minThumbPointerDown);
+    
+    this.maxThumbRef.nativeElement.removeEventListener('mousedown', this._maxThumbPointerDown);
+    this.maxThumbRef.nativeElement.removeEventListener('touchstart', this._maxThumbPointerDown);
+  }
 
   /* Subscriptions */
   private _syncSliderOrientation(): Subscription {
