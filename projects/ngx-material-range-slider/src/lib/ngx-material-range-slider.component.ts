@@ -30,13 +30,11 @@ const VERTICAL_SLIDER_CLASS = 'ngx-mat-range-slider-vertical';
 export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   /* Used for enabling or disabling the slider */
   @Input()
-  public get disabled(): boolean {
-    return this._disabled;
+  public set disabled(isDisabled: boolean | null) {
+    if (isDisabled !== null) {
+      this.isDisabledSubject.next(isDisabled);
+    }
   }
-  public set disabled(isDisabled: boolean) {
-    this._disabled = isDisabled;
-  }
-  private _disabled: boolean = false;
 
   /* Min limit of range */
   @Input()
@@ -89,6 +87,7 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
   private minValuePercent$!: Observable<number>;
   private maxValuePercent$!: Observable<number>;
 
+  private readonly isDisabledSubject = new BehaviorSubject<boolean>(false);
   private readonly isVerticalSubject = new BehaviorSubject<boolean>(false);
   private readonly minRangeLimitSubject = new BehaviorSubject<number>(DEFAULT_RANGE_LIMIT.min);
   private readonly maxRangeLimitSubject = new BehaviorSubject<number>(DEFAULT_RANGE_LIMIT.max);
@@ -190,7 +189,7 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
   }
 
   public setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    this.isDisabledSubject.next(isDisabled);
   }
 
   private _initObservables(): void {

@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { RangeInterval } from 'projects/ngx-material-range-slider/src/lib/models/range-interval.model';
+import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 const HORIZONTAL_DEFAULT_RANGE: RangeInterval = {
   min: 20,
@@ -17,7 +19,7 @@ const VERTICAL_DEFAULT_RANGE: RangeInterval = {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   public readonly horizontalSliderControl = new FormControl(HORIZONTAL_DEFAULT_RANGE);
   public readonly horizontalSliderMinLimitControl = new FormControl(0);
   public readonly horizontalSliderMaxLimitControl = new FormControl(100);
@@ -28,4 +30,21 @@ export class AppComponent {
   
   public readonly dynamicSliderControl = new FormControl(HORIZONTAL_DEFAULT_RANGE);
   public readonly dynamicSliderVerticalControl = new FormControl(false);
+  public readonly dynamicSliderDisabledControl = new FormControl(false);
+
+  private readonly subscriptions = new Subscription();
+
+  public ngOnInit(): void {
+    this.subscriptions.add(
+      this.dynamicSliderDisabledControl.valueChanges.pipe(
+        startWith(this.dynamicSliderDisabledControl.value)
+      ).subscribe(
+        (isDisabled) => isDisabled ? this.dynamicSliderControl.disable() : this.dynamicSliderControl.enable()
+      )
+    );
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 }
