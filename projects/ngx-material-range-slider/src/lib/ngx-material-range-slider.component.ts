@@ -63,16 +63,6 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     }
   }
 
-  /* Controls the visibility of thumb label */
-  @Input()
-  public get thumbLabel(): boolean {
-    return this._thumbLabel;
-  }
-  public set thumbLabel(value: boolean) {
-    this._thumbLabel = value;
-  }
-  private _thumbLabel: boolean = false;
-
   /* Controls the orientation of the slider */
   @Input()
   public set vertical(isVertical: boolean | null) {
