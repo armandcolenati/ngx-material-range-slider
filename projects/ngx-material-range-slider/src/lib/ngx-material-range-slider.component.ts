@@ -87,8 +87,8 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     this._onTouchedCallback();
   }
 
-  @ViewChild('minRangeThumb') public readonly minRangeThumbRef!: ElementRef<HTMLElement>;
-  @ViewChild('maxRangeThumb') public readonly maxRangeThumbRef!: ElementRef<HTMLElement>;
+  @ViewChild('minThumb') public readonly minThumbRef!: ElementRef<HTMLElement>;
+  @ViewChild('maxThumb') public readonly maxThumbRef!: ElementRef<HTMLElement>;
 
   public fillerTransform$!: Observable<string>;
   public minThumbTransform$!: Observable<string>;
@@ -168,11 +168,11 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
 
   public ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
-      this.minRangeThumbRef.nativeElement.addEventListener('mousedown', this._minThumbPointerDown);
-      this.minRangeThumbRef.nativeElement.addEventListener('touchstart', this._minThumbPointerDown);
+      this.minThumbRef.nativeElement.addEventListener('mousedown', this._minThumbPointerDown);
+      this.minThumbRef.nativeElement.addEventListener('touchstart', this._minThumbPointerDown);
       
-      this.maxRangeThumbRef.nativeElement.addEventListener('mousedown', this._maxThumbPointerDown);
-      this.maxRangeThumbRef.nativeElement.addEventListener('touchstart', this._maxThumbPointerDown);
+      this.maxThumbRef.nativeElement.addEventListener('mousedown', this._maxThumbPointerDown);
+      this.maxThumbRef.nativeElement.addEventListener('touchstart', this._maxThumbPointerDown);
     });
   }
 
@@ -185,11 +185,11 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     this.subscriptions.unsubscribe();
 
     this.ngZone.runOutsideAngular(() => {
-      this.minRangeThumbRef.nativeElement.removeEventListener('mousedown', this._minThumbPointerDown);
-      this.minRangeThumbRef.nativeElement.removeEventListener('touchstart', this._minThumbPointerDown);
+      this.minThumbRef.nativeElement.removeEventListener('mousedown', this._minThumbPointerDown);
+      this.minThumbRef.nativeElement.removeEventListener('touchstart', this._minThumbPointerDown);
       
-      this.maxRangeThumbRef.nativeElement.removeEventListener('mousedown', this._maxThumbPointerDown);
-      this.maxRangeThumbRef.nativeElement.removeEventListener('touchstart', this._maxThumbPointerDown);
+      this.maxThumbRef.nativeElement.removeEventListener('mousedown', this._maxThumbPointerDown);
+      this.maxThumbRef.nativeElement.removeEventListener('touchstart', this._maxThumbPointerDown);
     });
   }
 
