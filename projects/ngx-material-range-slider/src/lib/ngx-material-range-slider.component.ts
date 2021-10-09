@@ -99,10 +99,14 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     this._onTouchedCallback();
   }
 
+  public fillerTransform$!: Observable<string>;
   public minThumbTransform$!: Observable<string>;
   public maxThumbTransform$!: Observable<string>;
 
   private _onTouchedCallback: () => void = () => {};
+
+  private minValuePercent$!: Observable<number>;
+  private maxValuePercent$!: Observable<number>;
 
   private readonly isVerticalSubject = new BehaviorSubject<boolean>(false);
   private readonly minRangeLimitSubject = new BehaviorSubject<number>(DEFAULT_RANGE_LIMIT.min);
@@ -114,33 +118,45 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
   constructor(private readonly elementRef: ElementRef, private readonly renderer: Renderer2) { }
 
   public ngOnInit(): void {
-    const rangeValuePercentages$ = combineLatest([
-      this.minRangeLimitSubject,
-      this.maxRangeLimitSubject,
-      this.rangeValueSubject
-    ]).pipe(
-      map(([minRangeLimit, maxRangeLimit, rangeValue]) => ({
-        minPercentage: rangeValue.min / (maxRangeLimit - minRangeLimit),
-        maxPercentage: rangeValue.max / (maxRangeLimit - minRangeLimit),
-      }))
+    this.initObservables();
+
+    const minThumbOffset$ = this.minValuePercent$.pipe(
+      map((minPercent) => (1 - minPercent) * 100)
+    );
+
+    const maxThumbOffset$ = this.maxValuePercent$.pipe(
+      map((maxPercent) => (1 - maxPercent) * 100)
     );
 
     const thumbsTransforms$ = combineLatest([
       this.isVerticalSubject,
-      rangeValuePercentages$
+      minThumbOffset$,
+      maxThumbOffset$
     ]).pipe(
-      map(([isVertical, rangePercentages]) => {
+      map(([isVertical, minThumbOffset, maxThumbOffset]) => {
         const orientationAxis = isVertical ? 'Y' : 'X';
 
-        const minOffset = (1 - rangePercentages.minPercentage) * 100;
-        const maxOffset = (1 - rangePercentages.maxPercentage) * 100;
-
         return {
-          min: `translate${orientationAxis}(-${minOffset}%)`,
-          max: `translate${orientationAxis}(-${maxOffset}%)`
+          min: `translate${orientationAxis}(-${minThumbOffset}%)`,
+          max: `translate${orientationAxis}(-${maxThumbOffset}%)`
         }
       })
     );
+
+    this.fillerTransform$ = combineLatest([
+      this.isVerticalSubject,
+      minThumbOffset$,
+      this.minValuePercent$,
+      this.maxValuePercent$
+    ]).pipe(
+      map(([isVertical, minThumbOffset, minValuePercent, maxValuePercent]) => {
+        const orientationAxis = isVertical ? 'Y' : 'X';
+        const scalePercent = maxValuePercent - minValuePercent;
+        const scale = isVertical ? `1, ${scalePercent}, 1` : `${scalePercent}, 1, 1`;
+
+        return `translate${orientationAxis}(${100 - minThumbOffset}%) scale3d(${scale})`;
+      })
+    )
 
     this.minThumbTransform$ = thumbsTransforms$.pipe(
       map((thumbsTransforms) => thumbsTransforms.min),
@@ -180,8 +196,27 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
     this.disabled = isDisabled;
   }
 
-  private _clamp(value: number, min = 0, max = 1): number {
-    return Math.max(min, Math.min(value, max));
+  private initObservables(): void {
+    const rangeValuePercents$ = combineLatest([
+      this.minRangeLimitSubject,
+      this.maxRangeLimitSubject,
+      this.rangeValueSubject
+    ]).pipe(
+      map(([minRangeLimit, maxRangeLimit, rangeValue]) => ({
+        minPercent: rangeValue.min / (maxRangeLimit - minRangeLimit),
+        maxPercent: rangeValue.max / (maxRangeLimit - minRangeLimit),
+      }))
+    );
+
+    this.minValuePercent$ = rangeValuePercents$.pipe(
+      map((rangePercents) => rangePercents.minPercent),
+      distinctUntilChanged()
+    );
+
+    this.maxValuePercent$ = rangeValuePercents$.pipe(
+      map((rangePercents) => rangePercents.maxPercent),
+      distinctUntilChanged()
+    );
   }
 
   /* Subscriptions */
@@ -199,5 +234,10 @@ export class NgxMaterialRangeSliderComponent implements ControlValueAccessor, On
       this.renderer.addClass(sliderElement, HORIZONTAL_SLIDER_CLASS);
       this.renderer.removeClass(sliderElement, VERTICAL_SLIDER_CLASS);
     })
+  }
+
+  /* Utils */
+  private _clamp(value: number, min = 0, max = 1): number {
+    return Math.max(min, Math.min(value, max));
   }
 }
